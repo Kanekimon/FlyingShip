@@ -96,29 +96,6 @@ public class ShipMovement : MonoBehaviour
             _upwardsMovement = false;
         }
 
-        //if (_testing)
-        //{
-
-        //    if (_lastPos == Vector3.zero)
-        //    {
-        //        _lastPos = this.transform.position;
-        //        _inputs.y = 25f;
-        //    }
-        //    else
-        //    {
-        //        Debug.Log("Last Pos: " + _lastPos);
-        //        Debug.Log("Current Pos: " + this.transform.position);
-        //        if (_lastPos.y < this.transform.position.y)
-        //        {
-        //            _inputs.y -= 0.1f;
-        //        }
-        //        _lastPos = this.transform.position;
-        //    }
-
-        //    _upwardsMovement = true;
-        //}
-  
-
 
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
@@ -129,17 +106,24 @@ public class ShipMovement : MonoBehaviour
         {
             if (_keepHeight && fuel > 0)
             {
-                _inputs.y = (shipBody.mass + Physics.gravity.y *-1);
+                _inputs.y = (Physics.gravity.y *-1);
                 fuel -= _fuelUsage;
             }
             else
             {
                 _inputs.y = 0f;
+                _keepHeight = false;
             }
         }
 
-        if(_inputs.y > 0)
+        if (!_keepHeight && _inputs.y > 0)
             shipBody.AddForce(0, _inputs.y, 0, ForceMode.Force);
+        else if (_keepHeight)
+            shipBody.velocity = new Vector3(shipBody.velocity.x, 0, shipBody.velocity.z);
+        else
+            shipBody.AddForce(0, Physics.gravity.y, 0, ForceMode.Force);
+
+
 
 
 
